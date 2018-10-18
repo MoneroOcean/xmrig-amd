@@ -255,7 +255,7 @@ void Workers::soft_stop() // stop current workers leaving uv stuff intact (used 
 // setups workers based on specified algorithm (or its basic perf algo more specifically)
 bool Workers::switch_algo(const xmrig::Algorithm& algorithm)
 {
-    if (m_controller->config()->algorithm().algo() == algorithm.algo()) return true;
+    if (m_controller->config()->algorithm().perf_algo() == algorithm.perf_algo()) return true;
 
     soft_stop();
 
