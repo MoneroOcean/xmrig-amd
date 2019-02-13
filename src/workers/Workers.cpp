@@ -415,15 +415,16 @@ void Workers::onResult(uv_async_t *handle)
                 return;
             }
 
+            xmrig::Algorithm algo;
             cryptonight_ctx *ctx;
-            MemInfo info = Mem::create(&ctx, baton->jobs[0].algorithm().algo(), 1);
+            MemInfo info = Mem::create(&ctx, algo = baton->jobs[0].algorithm().algo(), 1);
 
             for (const Job &job : baton->jobs) {
                 JobResult result(job);
 
                 if (job.algorithm().algo() != algo) {
-                    CryptoNight::freeCtx(ctx);
-                    ctx = CryptoNight::createCtx(algo = job.algorithm().algo());
+                    Mem::release(&ctx, 1, info);
+                    info = Mem::create(&ctx, algo = baton->jobs[0].algorithm().algo(), 1);
                 }
 
                 if (job.poolId() == -100 || CryptoNight::hash(job, result, ctx)) {
