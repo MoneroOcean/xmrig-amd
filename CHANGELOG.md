@@ -1,3 +1,14 @@
+# v2.12.0
+- [#218](https://github.com/xmrig/xmrig-amd/pull/218) Added support for new algorithm `cryptonight/wow`, short alias `cn/wow` (also known as CryptonightR), for upcoming [Wownero](http://wownero.org) fork on February 14.
+- Improved `cryptonight/gpu` performance.
+
+# v2.11.1
+* Fixed regression, algorithm `cn-pico/trtl` was broken in v2.11.0.
+
+# v2.11.0
+- [#928](https://github.com/xmrig/xmrig/issues/928) Added support for new algorithm `cryptonight/gpu`, short alias `cn/gpu` (original name `cryptonight-gpu`), for upcoming [Ryo currency](https://ryo-currency.com) fork on February 14.
+- Fixed compatibility with AMD drivers, latest Windows/Linux drivers now supported.
+
 # v2.10.0
 - [#904](https://github.com/xmrig/xmrig/issues/904) Added new algorithm `cn-pico/trtl` (aliases `cryptonight-turtle`, `cn-trtl`) for upcoming TurtleCoin (TRTL) fork.
 
