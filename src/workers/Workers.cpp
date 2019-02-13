@@ -415,7 +415,7 @@ void Workers::onResult(uv_async_t *handle)
                 return;
             }
 
-            xmrig::Algorithm algo;
+            xmrig::Algo algo;
             cryptonight_ctx *ctx;
             MemInfo info = Mem::create(&ctx, algo = baton->jobs[0].algorithm().algo(), 1);
 
