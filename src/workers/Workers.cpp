@@ -424,7 +424,7 @@ void Workers::onResult(uv_async_t *handle)
 
                 if (job.algorithm().algo() != algo) {
                     Mem::release(&ctx, 1, info);
-                    info = Mem::create(&ctx, algo = baton->jobs[0].algorithm().algo(), 1);
+                    info = Mem::create(&ctx, algo = job.algorithm().algo(), 1);
                 }
 
                 if (job.poolId() == -100 || CryptoNight::hash(job, result, ctx)) {
