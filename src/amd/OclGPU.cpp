@@ -453,8 +453,6 @@ size_t InitOpenCL(GpuContext* ctx, size_t num_gpus, xmrig::Config *config, cl_co
         TempDeviceList[i] = DeviceIDList[ctx[i].deviceIdx];
     }
 
-    // we store previous OpenCL context in static variable to be able to release it next time we do algo switch
-    if (*opencl_ctx) OclLib::releaseContext(*opencl_ctx);
     *opencl_ctx = OclLib::createContext(nullptr, num_gpus, TempDeviceList, nullptr, nullptr, &ret);
 
     for (size_t i = 0; i < num_gpus; ++i) {
