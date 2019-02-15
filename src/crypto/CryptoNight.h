@@ -72,6 +72,7 @@ public:
     typedef void (*cn_hash_fun)(const uint8_t *input, size_t size, uint8_t *output, cryptonight_ctx **ctx, uint64_t height);
 
     static inline cn_hash_fun fn(xmrig::Variant variant) { return fn(m_algorithm, m_av, variant); }
+    static inline cn_hash_fun fn(xmrig::Algo algo, xmrig::Variant variant) { return fn(algo, m_av, variant); }
 
     static bool hash(const Job &job, JobResult &result, cryptonight_ctx *ctx);
     static bool init(xmrig::Algo algorithm);
