@@ -292,28 +292,22 @@ bool Workers::switch_algo(const xmrig::Algorithm& algorithm)
     m_threadsCount = threads.size();
     m_hashrate->set_threads(m_threadsCount);
 
-    contexts.resize(m_threadsCount);
+    std::vector<GpuContext *> contexts(m_threadsCount);
 
     const bool isCNv2 = algorithm.algo() == xmrig::CRYPTONIGHT && algorithm.variant() == xmrig::VARIANT_2;
     for (size_t i = 0; i < m_threadsCount; ++i) {
-        const xmrig::OclThread *thread = static_cast<OclThread *>(threads[i]);
+        xmrig::OclThread* const thread = static_cast<xmrig::OclThread *>(threads[i]);
         if (isCNv2 && thread->stridedIndex() == 1) {
             LOG_WARN("%sTHREAD #%zu: \"strided_index\":1 is not compatible with CryptoNight variant 2",
                      m_controller->config()->isColors() ? "\x1B[1;33m" : "", i);
         }
 
-        contexts[i] = GpuContext(thread->index(),
-                                 thread->intensity(),
-                                 thread->worksize(),
-                                 threadsCountByGPU(thread->index(), threads),
-                                 thread->stridedIndex(),
-                                 thread->memChunk(),
-                                 thread->isCompMode(),
-                                 thread->unrollFactor()
-                                 );
+        thread->setThreadsCountByGPU(threadsCountByGPU(thread->index(), threads));
+
+        contexts[i] = thread->ctx();
     }
 
-    if (InitOpenCL(contexts.data(), m_threadsCount, m_controller->config(), &m_opencl_ctx) != 0) {
+    if (InitOpenCL(contexts, m_controller->config(), &m_opencl_ctx) != 0) {
         return false;
     }
 
@@ -321,7 +315,7 @@ bool Workers::switch_algo(const xmrig::Algorithm& algorithm)
 
     size_t i = 0;
     for (xmrig::IThread *thread : threads) {
-        Handle *handle = new Handle(i, thread, &contexts[i], offset, ways);
+        Handle *handle = new Handle(i, thread, contexts[i], offset, ways);
         offset += thread->multiway();
         i++;
 
