@@ -47,9 +47,10 @@
 class xmrig::ControllerPrivate
 {
 public:
-    inline ControllerPrivate() :
+    inline ControllerPrivate(Process *process) :
+        config(nullptr),
         network(nullptr),
-        config(nullptr)
+        process(process)
     {}
 
 
@@ -60,14 +61,15 @@ public:
     }
 
 
+    Config *config;
     Network *network;
-    std::vector<xmrig::IControllerListener *> listeners;
-    xmrig::Config *config;
+    Process *process;
+    std::vector<IControllerListener *> listeners;
 };
 
 
-xmrig::Controller::Controller()
-    : d_ptr(new ControllerPrivate())
+xmrig::Controller::Controller(Process *process)
+    : d_ptr(new ControllerPrivate(process))
 {
 }
 
@@ -77,12 +79,6 @@ xmrig::Controller::~Controller()
     ConfigLoader::release();
 
     delete d_ptr;
-}
-
-
-bool xmrig::Controller::isDone() const
-{
-    return ConfigLoader::isDone();
 }
 
 
@@ -106,12 +102,12 @@ xmrig::Config *xmrig::Controller::config() const
 }
 
 
-int xmrig::Controller::init(int argc, char **argv)
+int xmrig::Controller::init()
 {
     Cpu::init();
 
     // init pconfig global pointer to config
-    pconfig = d_ptr->config = xmrig::Config::load(argc, argv, this);
+    pconfig = d_ptr->config = xmrig::Config::load(d_ptr->process, this);
     if (!d_ptr->config) {
         return 1;
     }
@@ -133,14 +129,14 @@ int xmrig::Controller::init(int argc, char **argv)
     }
 #   endif
 
-    if (strstr(config()->pools()[0].host(), "moneroocean.stream")) config()->setDonateLevel(0);
+    if (strstr(config()->pools().data()[0].host(), "moneroocean.stream")) config()->setDonateLevel(0);
 
     d_ptr->network = new Network(this);
     return 0;
 }
 
 
-Network *xmrig::Controller::network() const
+xmrig::Network *xmrig::Controller::network() const
 {
     assert(d_ptr->network != nullptr);
 
@@ -151,6 +147,20 @@ Network *xmrig::Controller::network() const
 void xmrig::Controller::addListener(IControllerListener *listener)
 {
     d_ptr->listeners.push_back(listener);
+}
+
+
+void xmrig::Controller::save()
+{
+    if (!config()) {
+        return;
+    }
+
+    if (d_ptr->config->isShouldSave()) {
+        d_ptr->config->save();
+    }
+
+    ConfigLoader::watch(d_ptr->config);
 }
 
 

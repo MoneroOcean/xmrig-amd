@@ -41,7 +41,8 @@ namespace xmrig {
 
 class ConfigLoader;
 class IThread;
-class IWatcherListener;
+class IConfigListener;
+class Process;
 
 
 class Config : public CommonConfig
@@ -69,7 +70,7 @@ public:
     inline float get_algo_perf(const xmrig::PerfAlgo pa) const             { return m_algo_perf[pa]; }
     inline void set_algo_perf(const xmrig::PerfAlgo pa, const float value) { m_algo_perf[pa] = value; }
 
-    static Config *load(int argc, char **argv, IWatcherListener *listener);
+    static Config *load(Process *process, IConfigListener *listener);
     static const char *vendorName(xmrig::OclVendor vendor);
 
 protected:
@@ -82,6 +83,7 @@ protected:
     void parseThreadsJSON(const rapidjson::Value &threads, xmrig::PerfAlgo);
 
 private:
+    std::vector<IThread *> filterThreads() const;
     void parseThread(const rapidjson::Value &object, const xmrig::PerfAlgo);
     void setPlatformIndex(const char *name);
     void setPlatformIndex(int index);
@@ -95,7 +97,7 @@ private:
     std::vector<IThread *> m_threads[xmrig::PerfAlgo::PA_MAX];
     // perf algo hashrate results
     float m_algo_perf[xmrig::PerfAlgo::PA_MAX];
-    xmrig::c_str m_loader;
+    xmrig::String m_loader;
     xmrig::OclVendor m_vendor;
 };
 

@@ -34,7 +34,7 @@ void Benchmark::start_perf_bench(const xmrig::PerfAlgo pa) {
     Workers::switch_algo(xmrig::Algorithm(pa)); // switch workers to new algo (Algo part)
 
     // prepare test job for benchmark runs
-    Job job;
+    xmrig::Job job;
     job.setPoolId(-100); // to make sure we can detect benchmark jobs
     job.setId(xmrig::Algorithm::perfAlgoName(pa)); // need to set different id so that workers will see job change
     const static uint8_t test_input[76] = {
@@ -54,10 +54,10 @@ void Benchmark::start_perf_bench(const xmrig::PerfAlgo pa) {
     Workers::setJob(job, false); // set job for workers to compute
 }
 
-void Benchmark::onJobResult(const JobResult& result) {
+void Benchmark::onJobResult(const xmrig::JobResult& result) {
     if (result.poolId != -100) { // switch to network pool jobs
         Workers::setListener(m_controller->network());
-        static_cast<IJobResultListener*>(m_controller->network())->onJobResult(result);
+        static_cast<xmrig::IJobResultListener*>(m_controller->network())->onJobResult(result);
         return;
     }
     // ignore benchmark results for other perf algo
