@@ -128,9 +128,9 @@ bool xmrig::Config::oclInit()
             m_oclCLI.autoConf(m_threads[pa], xmrig::Algorithm(pa), this);
             if (m_threads[pa].empty()) return false;
         }
+        m_threads[pa] = filterThreads(pa);
     }
 
-    m_threads = filterThreads();
     return !m_threads.empty();
 }
 
@@ -380,7 +380,7 @@ void xmrig::Config::parseJSON(const rapidjson::Document &doc)
 }
 
 
-std::vector<xmrig::IThread *> xmrig::Config::filterThreads() const
+std::vector<xmrig::IThread *> xmrig::Config::filterThreads(const xmrig::PerfAlgo pa) const
 {
     std::vector<IThread *> threads;
     const size_t platform_idx                   = static_cast<size_t>(platformIndex());
@@ -396,7 +396,7 @@ std::vector<xmrig::IThread *> xmrig::Config::filterThreads() const
         return threads;
     }
 
-    for (IThread *thread : m_threads) {
+    for (IThread *thread : m_threads[pa]) {
         if (thread->isValid() && thread->index() < entries) {
             threads.push_back(thread);
 

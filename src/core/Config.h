@@ -83,7 +83,7 @@ protected:
     void parseThreadsJSON(const rapidjson::Value &threads, xmrig::PerfAlgo);
 
 private:
-    std::vector<IThread *> filterThreads() const;
+    std::vector<IThread *> filterThreads(const xmrig::PerfAlgo pa) const;
     void parseThread(const rapidjson::Value &object, const xmrig::PerfAlgo);
     void setPlatformIndex(const char *name);
     void setPlatformIndex(int index);
