@@ -62,34 +62,42 @@ static const char *kVariant     = "variant";
 }
 
 
+xmrig::Algorithms all_algorithms() {
+    xmrig::Algorithms algorithms;
+    // here xmrig now reports all possible supported algorithms
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_1));
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_2));
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_0));
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_XTL));
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_MSR));
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_XAO));
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_RTO));
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_HALF));
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_GPU));
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_WOW));
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_4));
+
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT_LITE, xmrig::VARIANT_1));
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT_LITE, xmrig::VARIANT_0));
+
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT_HEAVY, xmrig::VARIANT_0));
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT_HEAVY, xmrig::VARIANT_XHV));
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT_HEAVY, xmrig::VARIANT_TUBE));
+
+    algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT_PICO, xmrig::VARIANT_TRTL));
+
+    return algorithms;
+}
+
+
 xmrig::Pool::Pool() :
+    m_algorithms(all_algorithms()),
     m_enabled(true),
     m_nicehash(false),
     m_tls(false),
     m_keepAlive(0),
     m_port(kDefaultPort)
 {
-    // here xmrig now resuts all possible supported algorithms
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_1));
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_2));
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_0));
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_XTL));
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_MSR));
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_XAO));
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_RTO));
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_HALF));
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_GPU));
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_WOW));
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT, xmrig::VARIANT_4));
-
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT_LITE, xmrig::VARIANT_1));
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT_LITE, xmrig::VARIANT_0));
-
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT_HEAVY, xmrig::VARIANT_0));
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT_HEAVY, xmrig::VARIANT_XHV));
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT_HEAVY, xmrig::VARIANT_TUBE));
-
-    m_algorithms.push_back(xmrig::Algorithm(xmrig::CRYPTONIGHT_PICO, xmrig::VARIANT_TRTL));
 }
 
 
@@ -105,6 +113,7 @@ xmrig::Pool::Pool() :
  * @param url
  */
 xmrig::Pool::Pool(const char *url) :
+    m_algorithms(all_algorithms()),
     m_enabled(true),
     m_nicehash(false),
     m_tls(false),
@@ -116,6 +125,7 @@ xmrig::Pool::Pool(const char *url) :
 
 
 xmrig::Pool::Pool(const rapidjson::Value &object) :
+    m_algorithms(all_algorithms()),
     m_enabled(true),
     m_nicehash(false),
     m_tls(false),
@@ -154,6 +164,7 @@ xmrig::Pool::Pool(const rapidjson::Value &object) :
 
 
 xmrig::Pool::Pool(const char *host, uint16_t port, const char *user, const char *password, int keepAlive, bool nicehash, bool tls) :
+    m_algorithms(all_algorithms()),
     m_nicehash(nicehash),
     m_tls(tls),
     m_keepAlive(keepAlive),
