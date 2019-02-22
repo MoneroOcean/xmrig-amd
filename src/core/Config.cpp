@@ -126,12 +126,12 @@ bool xmrig::Config::oclInit()
             m_autoConf   = true;
             m_shouldSave = true;
             m_oclCLI.autoConf(m_threads[pa], xmrig::Algorithm(pa), this);
-            if (m_threads[pa].empty()) return false;
         }
         m_threads[pa] = filterThreads(pa);
+        if (m_threads[pa].empty()) return false;
     }
 
-    return !m_threads.empty();
+    return true;
 }
 
 

@@ -296,7 +296,7 @@ bool Workers::switch_algo(const xmrig::Algorithm& algorithm)
 
     const bool isCNv2 = algorithm.algo() == xmrig::CRYPTONIGHT && algorithm.variant() == xmrig::VARIANT_2;
     for (size_t i = 0; i < m_threadsCount; ++i) {
-        const xmrig::OclThread* const thread = static_cast<xmrig::OclThread *>(threads[i]);
+        xmrig::OclThread* const thread = static_cast<xmrig::OclThread *>(threads[i]);
         if (isCNv2 && thread->stridedIndex() == 1) {
             LOG_WARN("%sTHREAD #%zu: \"strided_index\":1 is not compatible with CryptoNight variant 2",
                      m_controller->config()->isColors() ? "\x1B[1;33m" : "", i);
@@ -307,7 +307,7 @@ bool Workers::switch_algo(const xmrig::Algorithm& algorithm)
         contexts[i] = thread->ctx();
     }
 
-    if (InitOpenCL(contexts, m_threadsCount, m_controller->config(), &m_opencl_ctx) != 0) {
+    if (InitOpenCL(contexts, m_controller->config(), &m_opencl_ctx) != 0) {
         return false;
     }
 
