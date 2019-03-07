@@ -24,6 +24,7 @@
             "nicehash": false,
             "keepalive": false,
             "variant": -1,
+            "enabled": true,
             "tls": false,
             "tls-fingerprint": null
         }
@@ -37,5 +38,5 @@
     "calibrate-algo-time": 60,
     "user-agent": null,
     "syslog": false,
-    "watch": false
+    "watch": true
 }
