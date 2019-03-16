@@ -883,8 +883,6 @@ void ReleaseOpenCl(GpuContext* ctx)
     }
 
     OclLib::releaseCommandQueue(ctx->CommandQueues);
-
-    if (ctx->ProgramCryptonightR) CryptonightR_release(ctx);
 }
 
 
